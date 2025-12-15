@@ -1,0 +1,28 @@
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/output)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/output)
+set(CMAKE_BUILD_RPATH "$ORIGIN")
+
+if(WIN32 OR WIN64 OR MINGW)
+    add_definitions(-D___WINDOWS___)
+    set(TARGET_SYSTEM "WINDOWS")
+    set(OUTPUT_SUFFIX_STATIC ".lib")
+    set(OUTPUT_SUFFIX_DYNAMIC ".dll")
+elseif(UNIX)
+    add_definitions(-D___UNIX___)
+    set(TARGET_SYSTEM "LINUX")
+    set(OUTPUT_SUFFIX_STATIC ".a")
+    set(OUTPUT_SUFFIX_DYNAMIC ".so")
+endif()
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(TARGET_ARCH "x64")
+    add_compile_definitions(_X64)
+else()
+    set(TARGET_ARCH "x86")
+    add_compile_definitions(_X86)
+endif()
+
+add_compile_definitions(___ARCH___="${TARGET_ARCH}")
